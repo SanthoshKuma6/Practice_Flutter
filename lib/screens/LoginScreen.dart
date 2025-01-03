@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Header.dart';
-import 'InputWraper.dart';
+
+import '../components/Login_Components.dart';
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -12,22 +13,24 @@ class LoginScreen extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.cyan,
-          Colors.cyan,
-          Colors.cyan,
+          Colors.grey,
+          Colors.grey,
+          Colors.grey,
         ])
         ),
 
         child: Column(
           children: <Widget>[
-            SizedBox(height: 80,),
+            SizedBox(height: 30,),
             Header(),
             Expanded(child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(60),
-                  topRight: Radius.circular(60),
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40),
                 ),
 
               ),
