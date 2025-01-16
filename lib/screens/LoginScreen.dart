@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:myfirstapp/screens/SignUpScreen.dart';
 import '../components/Login_Components.dart';
 import 'ForgetScreen.dart';
 import 'HomeScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -24,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  String _validatePassword(String? value) {
+  String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return "Password can't be empty";
     }
@@ -34,31 +37,39 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!RegExp(r'^\d+$').hasMatch(value)) {
       return "Password must contain only digits";
     }
-    return "";
+    return null; // Return null for valid cases
   }
 
-  void _submit() {
+  void _submit() async{
     if (_formKey.currentState!.validate()) {
-      print("Submit button clicked!"); // Debug print
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Validation successful! Navigating to Home...")),
-      );
+      print("Validation successful!");
+      print("Navigating to HomeScreen...");
+      // Save email and password in SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('email', _emailController.text);
+      await prefs.setString('password', _passwordController.text);
+
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()), // Navigate to Home
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
-      _emailController.clear();
-      _passwordController.clear();
+    } else {
+      print("Validation failed!");
     }
   }
- void _submitForget() {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ForgetScreen()), // Navigate to Home
-      );
 
+  void _submitForget() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ForgetScreen()), // Navigate to Home
+    );
   }
 
+  void _signupSubmit() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => SignUpScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child:
-
-              Form(
+              child: Form(
                 key: _formKey, // Use GlobalKey
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -109,16 +118,30 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        SimpleText(textLabel: "Forget Password",onPress: _submitForget),
+                        GestureDetector(
+                          onTap: _submitForget,
+                          child: SimpleText(
+                              textLabel: "Forget Password ?",
+                              ),
+                        ),
                         SizedBox(width: 10),
                       ],
                     ),
                     SizedBox(
                       height: 40,
                     ),
-                    Button(
-                      onPress: _submit, // Link to the _submit method
+                    GestureDetector(
+                      onTap: _submit,
+                      child: Button(),
                     ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    GestureDetector(
+                        onTap: _signupSubmit,
+                        child: SimpleText(
+                            textLabel: "Dont have an account Signup",
+                            ))
                   ],
                 ),
               ),

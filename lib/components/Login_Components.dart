@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class SimpleText extends StatelessWidget {
   final String textLabel;
-final VoidCallback onPress;
-  SimpleText({required this.textLabel,required this.onPress});
+
+  SimpleText({required this.textLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,9 @@ final VoidCallback onPress;
           Text(
             textLabel,
             style: TextStyle(
-                color: Colors.black, fontSize: 15, fontWeight: FontWeight.normal),
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.normal),
           ),
         ],
       ),
@@ -22,15 +24,11 @@ final VoidCallback onPress;
 }
 
 class Button extends StatelessWidget {
-  final VoidCallback onPress; // Callback function
 
-  Button({required this.onPress});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPress, // Add the onTap property to handle button press
-      child: Container(
+    return  Container(
         height: 50,
         margin: EdgeInsets.symmetric(horizontal: 50),
         decoration: BoxDecoration(
@@ -47,11 +45,9 @@ class Button extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }
-
 
 class Header extends StatelessWidget {
   const Header({super.key});
@@ -68,7 +64,6 @@ class Header extends StatelessWidget {
     );
   }
 }
-
 
 class EmailTextField extends StatelessWidget {
   final String emailTextLabel;
@@ -107,13 +102,16 @@ class EmailTextField extends StatelessWidget {
   }
 }
 
-
 class PasswordFiled extends StatelessWidget {
   final String PasswordTextLabel;
   final TextEditingController passwordController;
-  final String Function(String?)? validator;
+  final String? Function(String?)? validator;
 
-  PasswordFiled({required this.PasswordTextLabel, required this.passwordController,required this.validator});
+
+  PasswordFiled(
+      {required this.PasswordTextLabel,
+      required this.passwordController,
+      required this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -129,8 +127,7 @@ class PasswordFiled extends StatelessWidget {
             decoration: InputDecoration(
                 hintText: PasswordTextLabel,
                 hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none
-            ),
+                border: InputBorder.none),
             validator: validator,
           ),
         ),

@@ -1,37 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'LoginScreen.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
+class HomeScreen extends StatelessWidget {
+  Future<void> _checkAndNavigate(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-class _HomeScreenState extends State<HomeScreen> {
-
-  void initState() {
-    super.initState();
-    // Hide the status bar
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    if (isLoggedIn) {
+      // Stay on HomeScreen
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Already logged in!")),
+      );
+    } else {
+      // Navigate to LoginScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    }
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
-        backgroundColor: Colors.green,
-
+        title: Text('Home Screen'),
       ),
       body: Center(
-
-        child: Column(
-
-          children: [
-
-            Container(
-
-            )
-          ],
+        child: ElevatedButton(
+          onPressed: () => _checkAndNavigate(context),
+          child: Text("Login"),
         ),
       ),
     );
