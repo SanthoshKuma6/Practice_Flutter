@@ -11,20 +11,28 @@ class _DetailedScreen extends State<DetailScreen> {
   ResponseInMapModel responseInMapModel = ResponseInMapModel();
   bool loading = true;
 
+  @override
   void initState() {
-    super.initState();
     getData();
+    super.initState();
+
   }
 
-  getData() {
-    Repository().responseInMap().then((value) {
-      responseInMapModel = value;
-      loading=false;
-
-    }).onError((error, stackTrace) {
+  getData() async {
+    try {
+      final value = await Repository().responseInMap();
+      setState(() {
+        responseInMapModel = value;
+        loading = false;
+      });
+    } catch (error) {
       print("Error => ${error.toString()}");
-    });
+      setState(() {
+        loading = false;
+      });
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +43,7 @@ class _DetailedScreen extends State<DetailScreen> {
       ),
       body: loading? Center(child: CircularProgressIndicator(),):
 
-      ListView.builder( itemCount: responseInMapModel.data?.length, itemBuilder: (context, index) {
+      ListView.builder( itemCount: responseInMapModel.data?.length??0, itemBuilder: (context, index) {
         return ListTile(
           title: Text(responseInMapModel.data?[index].firstName??""),
           subtitle: Text(responseInMapModel.data?[index].email??""),

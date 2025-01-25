@@ -1,28 +1,29 @@
 import 'package:dio/dio.dart';
+import 'package:myfirstapp/network_manager/injuction_container.dart';
 
 class DioHelper {
-  Dio dio = Dio();
+  Dio dio = getDio();
   Options options = Options(
-      receiveDataWhenStatusError: true,
-      contentType: "application/json",
-      sendTimeout: Duration(seconds: 10),
-      receiveTimeout: Duration(seconds: 10));
+    receiveDataWhenStatusError: true,
+    contentType: "application/json",
+    sendTimeout: Duration(seconds: 30),
+    receiveTimeout: Duration(seconds: 30),
+  );
 
-  Map<String, dynamic> headers = {"isAuthRequired": "Bearer token"};
+  Map<String, dynamic> headers = {"Authorization": "Bearer token"};
 
   /// get api
-
-  Future<dynamic> get(
-      {required String url, bool isAuthRequired = false}) async {
-    if (isAuthRequired) {
-      options.headers = headers;
-
-      try {
-        Response response = await dio.get(url, options: options);
-        return response.data;
-      } catch (e) {
-        return null;
+  Future<dynamic> get({required String url, bool isAuthRequired = false}) async {
+    try {
+      if (isAuthRequired) {
+        options.headers = headers;
       }
+      Response response = await dio.get(url, options: options);
+      return response.data;
+    } catch (e) {
+      print("Error in GET request: $e");
+      return null; // Or rethrow the exception
     }
   }
+
 }
